@@ -1,15 +1,19 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ControladorMeio {
     private static ControladorMeio instancia;
-    private List<String> meio = new ArrayList<>();
-    private final List<Transmissor> transmissores = new ArrayList<>();
     private final Log log = new Log("MEIO");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+    private final EstatisticasMeio estatisticasMeio = new EstatisticasMeio();
+    private final List<Transmissor> transmissores = new ArrayList<>();
+    private List<String> meio = new ArrayList<>();
     private int proximoIdTransmissor = 1;
     private boolean estaSendoLimpo;
-    ;
+
 
     public static synchronized ControladorMeio getInstancia() {
         if (instancia == null) {
@@ -51,6 +55,8 @@ public class ControladorMeio {
                 log("CONFLITO NO MEIO - " + meio);
                 notificarConflito();
                 limparMeio();
+                estatisticasMeio.totalConflitos++;
+                estatisticasMeio.ultimoConflito = new Date();
             }
 
             Sleep.sleep(100);

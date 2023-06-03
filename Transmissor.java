@@ -10,7 +10,7 @@ public class Transmissor extends Thread {
     @Override
     public void run() {
         controladorMeio.ingressarAoMeio(this);
-        log = new Log(String.valueOf(id));
+        log = new Log(String.valueOf(getId()));
         enviarMensagensAleatoriamente();
     }
 
