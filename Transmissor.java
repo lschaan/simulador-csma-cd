@@ -1,17 +1,16 @@
 import java.util.Random;
 
 public class Transmissor extends Thread {
-    private String id;
-    private ControladorMeio controladorMeio;
+    private ControladorMeio controladorMeio = ControladorMeio.getInstancia();
+    private int id;
+    private Log log;
     private volatile boolean backoffOcorrendo;
     private Integer proximoNBackoff;
-    private Log log;
 
     @Override
     public void run() {
-        this.controladorMeio = ControladorMeio.getInstancia();
         controladorMeio.ingressarAoMeio(this);
-        log = new Log(id);
+        log = new Log(String.valueOf(id));
         enviarMensagensAleatoriamente();
     }
 
@@ -23,13 +22,13 @@ public class Transmissor extends Thread {
     private void enviarMensagensAleatoriamente() {
         log("Enviando mensagens aleatoriamente!");
         while (true) {
-            int segundosAteProximaMensagem = new Random().nextInt(10) + 1; //Entre 1 e 10 segundos
+            int segundosAteProximaMensagem = new Random().nextInt(TEMPO_MAXIMO_ENTRE_MSG) + TEMPO_MINIMO_ENTRE_MSG; //Entre 1 e 10 segundos
             log("Aguardando " + segundosAteProximaMensagem + " segundos até o próximo envio.");
             Sleep.sleep(segundosAteProximaMensagem * 1000);
 
             while (backoffOcorrendo) {
                 log("Ia enviar mensagem, mas backoff está ocorrendo!");
-                Thread.onSpinWait();
+                Sleep.sleep(750);
             }
             enviarMensagem();
         }
@@ -72,15 +71,22 @@ public class Transmissor extends Thread {
         }
 
         double tempoBackoffMs = Math.pow(2, proximoNBackoff) * 1000;
+        backoffOcorrendo = true;
         log("Iniciando backoff! n=" + proximoNBackoff + ", tempo=" + tempoBackoffMs);
         Sleep.sleep((long) tempoBackoffMs);
 
+        backoffOcorrendo = false;
         log("Backoff encerrado!");
         proximoNBackoff++;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
     private String getMensagem() {
@@ -88,7 +94,9 @@ public class Transmissor extends Thread {
     }
 
     private static final int N_MINIMO_BACKOFF = 1;
-    private static final int N_MAXIMO_BACKOFF = 5;
+    private static final int N_MAXIMO_BACKOFF = 4;
+    private static final int TEMPO_MINIMO_ENTRE_MSG = 1;
+    private static final int TEMPO_MAXIMO_ENTRE_MSG = 5;
 
     private void log(String message) {
         log.log(message);

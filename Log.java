@@ -11,7 +11,7 @@ public class Log {
     }
 
     public void log(String mensagem) {
-        System.out.printf("%-5s %-60s %s\n", transmissor, mensagem, simpleDateFormat.format(new Date()));
+//        System.out.printf("%-5s %-60s %s\n", transmissor, mensagem, simpleDateFormat.format(new Date()));
     }
 
     public void erro(Exception exception) {

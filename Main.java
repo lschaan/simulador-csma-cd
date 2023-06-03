@@ -5,5 +5,6 @@ public class Main {
 
         new Transmissor().start();
         new Transmissor().start();
+        EstatisticasMeio.getInstancia().mostrarEstatisticasAtuais();
     }
 }

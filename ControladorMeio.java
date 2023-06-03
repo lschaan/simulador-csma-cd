@@ -6,9 +6,10 @@ public class ControladorMeio {
     private static ControladorMeio instancia;
     private List<String> meio = new ArrayList<>();
     private final List<Transmissor> transmissores = new ArrayList<>();
+    private final Log log = new Log("MEIO");
     private int proximoIdTransmissor = 1;
     private boolean estaSendoLimpo;
-    private Log log;
+    ;
 
     public static synchronized ControladorMeio getInstancia() {
         if (instancia == null) {
@@ -18,16 +19,15 @@ public class ControladorMeio {
     }
 
     public void iniciar() {
-        this.log = new Log("MEIO");
         CompletableFuture.runAsync(this::monitorarConflitos);
     }
 
     public void ingressarAoMeio(Transmissor transmissor) {
-        transmissor.setId(String.valueOf(proximoIdTransmissor++));
+        transmissor.setId(proximoIdTransmissor++);
         transmissores.add(transmissor);
     }
 
-    public void enviarMensagem(String mensagem) {
+    public synchronized void enviarMensagem(String mensagem) {
         meio.add(mensagem);
         log("Mensagem recebida! - " + meio);
         CompletableFuture.runAsync(() -> removerMensagem(mensagem));
@@ -63,7 +63,7 @@ public class ControladorMeio {
 
     //Notifica os transmissores da existência de conflito no meio
     private void notificarConflito() {
-        transmissores.forEach(Transmissor::onColisao);
+        transmissores.forEach(transmissor -> CompletableFuture.runAsync(transmissor::onColisao));
     }
 
     private void limparMeio() {
