@@ -1,3 +1,5 @@
+package com.lschaan.utils;
+
 public class Sleep {
 
     public static void sleep(long ms) {

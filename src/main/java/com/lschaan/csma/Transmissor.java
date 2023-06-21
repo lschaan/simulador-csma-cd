@@ -1,3 +1,9 @@
+package com.lschaan.csma;
+
+import com.lschaan.csma.ControladorMeio;
+import com.lschaan.utils.Log;
+import com.lschaan.utils.Sleep;
+
 import java.util.Random;
 
 public class Transmissor extends Thread {
