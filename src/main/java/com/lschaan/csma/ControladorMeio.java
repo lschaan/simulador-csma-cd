@@ -11,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 public class ControladorMeio {
     private static ControladorMeio instancia;
     private final Log log = new Log("MEIO");
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
     private final List<Transmissor> transmissores = new ArrayList<>();
     private List<String> meio = new ArrayList<>();
     private int proximoIdTransmissor = 1;
