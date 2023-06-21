@@ -38,11 +38,11 @@ public class Transmissor extends Thread {
         log("Iniciando sensing... ");
 
         long tempoInicioSensingMs = System.currentTimeMillis();
-        long duracaoSensingMs = 3500;
+        long duracaoSensingSegundos = 3;
         boolean ocorreuProblema = false;
 
         //Realiza sensing, até o tempo finalizar OU houver alguma mensagem no meio
-        while (System.currentTimeMillis() - tempoInicioSensingMs < duracaoSensingMs) {
+        while (System.currentTimeMillis() - tempoInicioSensingMs < duracaoSensingSegundos * 1000) {
             //Caso encontre colisão, encerra o sensing. Inicia o backoff
             if (controladorMeio.estaSendoLimpo()) {
                 ocorreuProblema = true;
@@ -62,12 +62,12 @@ public class Transmissor extends Thread {
         }
 
         log("Sensing encerrado! Enviando nova mensagem... ");
-        controladorMeio.enviarMensagem(getMensagem());
+        controladorMeio.enviarMensagem("[id=" + id + "]");
     }
 
     private void iniciarBackoff() {
-        if (proximoNBackoff == null || proximoNBackoff > N_MINIMO_BACKOFF) {
-            proximoNBackoff = new Random().nextInt(N_MAXIMO_BACKOFF) + N_MAXIMO_BACKOFF;
+        if (proximoNBackoff == null || proximoNBackoff > N_MAXIMO_BACKOFF) {
+            proximoNBackoff = new Random().nextInt(N_MAXIMO_BACKOFF) + N_MINIMO_BACKOFF;
         }
 
         double tempoBackoffMs = Math.pow(2, proximoNBackoff) * 1000;
@@ -89,14 +89,10 @@ public class Transmissor extends Thread {
         return id;
     }
 
-    private String getMensagem() {
-        return "[id=" + id + "]";
-    }
-
     private static final int N_MINIMO_BACKOFF = 1;
-    private static final int N_MAXIMO_BACKOFF = 4;
+    private static final int N_MAXIMO_BACKOFF = 3;
     private static final int TEMPO_MINIMO_ENTRE_MSG = 1;
-    private static final int TEMPO_MAXIMO_ENTRE_MSG = 5;
+    private static final int TEMPO_MAXIMO_ENTRE_MSG = 4;
 
     private void log(String message) {
         log.log(message);

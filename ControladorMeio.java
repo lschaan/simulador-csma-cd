@@ -33,7 +33,7 @@ public class ControladorMeio {
 
     public synchronized void enviarMensagem(String mensagem) {
         meio.add(mensagem);
-        log("Mensagem recebida! - " + meio);
+        log("Mensagem recebida! - " + mensagem);
         CompletableFuture.runAsync(() -> removerMensagem(mensagem));
     }
 
@@ -75,7 +75,7 @@ public class ControladorMeio {
     private void limparMeio() {
         log("Iniciando limpeza do meio!");
         estaSendoLimpo = true;
-        Sleep.sleep(2500);
+        Sleep.sleep(1500);
 
         meio = new ArrayList<>();
         estaSendoLimpo = false;

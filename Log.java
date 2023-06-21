@@ -22,10 +22,6 @@ public class Log {
         System.out.printf(getCor() + "%-6s %-60s %s\u001B[0m \n", "[" + transmissor + "]", mensagem, simpleDateFormat.format(new Date()));
     }
 
-    public void mostrarEstatisticas() {
-
-    }
-
     private String getCor() {
         return cores.getOrDefault(transmissor, "");
     }
