@@ -8,7 +8,6 @@ public class ControladorMeio {
     private static ControladorMeio instancia;
     private final Log log = new Log("MEIO");
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-    private final EstatisticasMeio estatisticasMeio = new EstatisticasMeio();
     private final List<Transmissor> transmissores = new ArrayList<>();
     private List<String> meio = new ArrayList<>();
     private int proximoIdTransmissor = 1;
@@ -55,8 +54,6 @@ public class ControladorMeio {
                 log("CONFLITO NO MEIO - " + meio);
                 notificarConflito();
                 limparMeio();
-                estatisticasMeio.totalConflitos++;
-                estatisticasMeio.ultimoConflito = new Date();
             }
 
             Sleep.sleep(100);

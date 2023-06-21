@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class Transmissor extends Thread {
-    private ControladorMeio controladorMeio = ControladorMeio.getInstancia();
+    private final ControladorMeio controladorMeio = ControladorMeio.getInstancia();
     private int id;
     private Log log;
     private volatile boolean backoffOcorrendo;
