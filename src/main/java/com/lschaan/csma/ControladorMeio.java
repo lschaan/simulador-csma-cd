@@ -3,7 +3,6 @@ package com.lschaan.csma;
 import com.lschaan.utils.Log;
 import com.lschaan.utils.Sleep;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +24,7 @@ public class ControladorMeio {
     }
 
     public void iniciar() {
-        CompletableFuture.runAsync(this::monitorarConflitos);
+        CompletableFuture.runAsync(this::monitorarColisoes);
     }
 
     public void ingressarAoMeio(Transmissor transmissor) {
@@ -48,14 +47,14 @@ public class ControladorMeio {
     }
 
     /*
-    Monitora infinitamente a existência de conflitos no meio a cada 100ms
+    Monitora infinitamente a existência de colisões no meio a cada 100ms
     Caso exista, notifica os Transmissores e limpa o meio
      */
-    private void monitorarConflitos() {
+    private void monitorarColisoes() {
         while (true) {
-            if (existeConflito()) {
-                log("CONFLITO NO MEIO - " + meio);
-                notificarConflito();
+            if (existeColisao()) {
+                log("COLISÃO NO MEIO - " + meio);
+                notificarColisao();
                 limparMeio();
             }
 
@@ -63,12 +62,12 @@ public class ControladorMeio {
         }
     }
 
-    private boolean existeConflito() {
+    private boolean existeColisao() {
         return meio.size() > 1;
     }
 
-    //Notifica os transmissores da existência de conflito no meio
-    private void notificarConflito() {
+    //Notifica os transmissores da existência de colisão no meio
+    private void notificarColisao() {
         transmissores.forEach(transmissor -> CompletableFuture.runAsync(transmissor::onColisao));
     }
 
